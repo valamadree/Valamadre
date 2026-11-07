@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel & Thread — Crochet, accesorios y papelería</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="logo">
+      <span class="pixel-horse">🐴</span>
+      <h1>Pixel & Thread</h1>
+    </div>
+    <button id="cart-toggle" class="cart-btn" aria-label="Abrir carrito">
+      🛒 <span id="cart-count">0</span>
+    </button>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-content">
+      <h2>Hecho a mano, hecho con magia</h2>
+      <p>Crochet, accesorios y papelería entre lo cute y lo dark.</p>
+      <a href="#productos" class="btn-primary">Ver productos</a>
+    </div>
+  </section>
+
+  <!-- PRODUCTOS -->
+  <main>
+    <section id="productos" class="products-section">
+      <h2 class="section-title">✦ Catálogo ✦</h2>
+      <div class="product-grid" id="product-grid">
+        <!-- Los productos se generan desde script.js -->
+      </div>
+    </section>
+  </main>
+
+  <!-- CARRITO (panel lateral) -->
+  <aside id="cart-panel" class="cart-panel" aria-hidden="true">
+    <div class="cart-header">
+      <h3>Tu carrito</h3>
+      <button id="cart-close" aria-label="Cerrar carrito">✕</button>
+    </div>
+    <ul id="cart-items" class="cart-items"></ul>
+    <div class="cart-footer">
+      <p>Total: <strong id="cart-total">$0</strong></p>
+      <button id="checkout-btn" class="btn-primary">Finalizar compra</button>
+      <small>Serás redirigida a una pasarela segura (Stripe/PayPal).</small>
+    </div>
+  </aside>
+  <div id="cart-overlay" class="cart-overlay"></div>
+
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <p>© 2025 Pixel & Thread · Hecho con 🧶 y ✨</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
