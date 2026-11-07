@@ -13,7 +13,8 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  background-color: var(--rosa-fondo);
+  background-color: #ffe4ec 
+  (--rosa-fondo);
   color: var(--texto);
   font-family: var(--fuente-texto);
   line-height: 1.6;
