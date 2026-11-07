@@ -1,141 +1,144 @@
-// ===== DATOS DE PRODUCTOS (edítalos a tu gusto) =====
+// ===== DATOS DE PRODUCTOS (Ahora con categorías) =====
 const productos = [
-  { id: 1, nombre: "Amigurumi Caballo", precio: 25, emoji: "🐴" },
-  { id: 2, nombre: "Bolso tejido rosa", precio: 18, emoji: "👜" },
-  { id: 3, nombre: "Set de stickers pixel", precio: 6, emoji: "✨" },
-  { id: 4, nombre: "Bufanda cielo", precio: 22, emoji: "🧣" },
-  { id: 5, nombre: "Libreta dark cute", precio: 12, emoji: "📓" },
-  { id: 6, nombre: "Llavero crochet estrella", precio: 5, emoji: "⭐" },
+  { id: 1, nombre: "Amigurumi Osito", precio: 18, categoria: "crochet", img: "https://images.unsplash.com/photo-1559454403-b8fb88521f11?w=400" },
+  { id: 2, nombre: "Bolso Crochet Rosa", precio: 28, categoria: "crochet", img: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400" },
+  { id: 3, nombre: "Cuaderno Dark Cute", precio: 12, categoria: "papeleria", img: "https://images.unsplash.com/photo-1531346878377-a5be20888e57?w=400" },
+  { id: 4, nombre: "Llavero Pixel", precio: 8, categoria: "accesorios", img: "https://images.unsplash.com/photo-1606760227091-3dd870d97f1d?w=400" },
+  { id: 5, nombre: "Calcetines Kawaii", precio: 10, categoria: "accesorios", img: "https://images.unsplash.com/photo-1586350977771-b3b0abd50c82?w=400" },
+  { id: 6, nombre: "Stickers Dark", precio: 6, categoria: "papeleria", img: "https://images.unsplash.com/photo-1572375992501-4b0892d50c69?w=400" }
 ];
 
-// ===== ESTADO DEL CARRITO =====
-let carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+let carrito = [];
 
-// ===== RENDER DE PRODUCTOS =====
+// ===== RENDERIZAR PRODUCTOS Y FILTROS =====
 const grid = document.getElementById("product-grid");
+const categoryBtns = document.querySelectorAll(".category-btn");
 
-productos.forEach((p) => {
-  const card = document.createElement("div");
-  card.className = "product-card";
-  card.innerHTML = `
-    <div class="product-img">${p.emoji}</div>
-    <div class="product-info">
+function renderProductos(categoriaFiltro = "todos") {
+  grid.innerHTML = ""; // Limpiar grid
+  
+  const productosFiltrados = categoriaFiltro === "todos" 
+    ? productos 
+    : productos.filter(p => p.categoria === categoriaFiltro);
+
+  productosFiltrados.forEach(p => {
+    const card = document.createElement("div");
+    card.className = "product-card";
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.nombre}">
       <h3>${p.nombre}</h3>
-      <span class="product-price">$${p.precio}</span>
-      <button class="add-btn" data-id="${p.id}">Agregar</button>
-    </div>
-  `;
-  grid.appendChild(card);
-});
-
-// ===== AGREGAR AL CARRITO =====
-grid.addEventListener("click", (e) => {
-  if (e.target.classList.contains("add-btn")) {
-    const id = parseInt(e.target.dataset.id);
-    const prod = productos.find((p) => p.id === id);
-    const item = carrito.find((i) => i.id === id);
-
-    if (item) {
-      item.cantidad++;
-    } else {
-      carrito.push({ id: prod.id, nombre: prod.nombre, precio: prod.precio, cantidad: 1 });
-    }
-    guardarYRenderizar();
-  }
-});
-
-// ===== GUARDAR Y RENDERIZAR CARRITO =====
-function guardarYRenderizar() {
-  localStorage.setItem("carrito", JSON.stringify(carrito));
-  renderCarrito();
-  actualizarContador();
+      <div class="price">$${p.precio}</div>
+      <button class="btn-add" onclick="agregarAlCarrito(${p.id})">Agregar</button>
+    `;
+    grid.appendChild(card);
+  });
 }
 
-function renderCarrito() {
+// Eventos de los botones de categoría
+categoryBtns.forEach(btn => {
+  btn.addEventListener("click", (e) => {
+    // Quitar clase active a todos
+    categoryBtns.forEach(b => b.classList.remove("active"));
+    // Poner active al clickeado
+    e.target.classList.add("active");
+    // Renderizar filtrados
+    renderProductos(e.target.dataset.category);
+  });
+});
+
+// Renderizado inicial
+renderProductos();
+
+// ===== LÓGICA DEL CARRITO =====
+function agregarAlCarrito(id) {
+  const prod = productos.find(p => p.id === id);
+  const existente = carrito.find(item => item.id === id);
+  if (existente) {
+    existente.cantidad++;
+  } else {
+    carrito.push({ ...prod, cantidad: 1 });
+  }
+  actualizarCarrito();
+}
+
+function actualizarCarrito() {
   const lista = document.getElementById("cart-items");
   lista.innerHTML = "";
+  let total = 0;
+  let contador = 0;
 
-  if (carrito.length === 0) {
-    lista.innerHTML = "<li style='justify-content:center;'>Tu carrito está vacío 🐴</li>";
-  }
-
-  carrito.forEach((item) => {
+  carrito.forEach(item => {
+    total += item.precio * item.cantidad;
+    contador += item.cantidad;
     const li = document.createElement("li");
     li.innerHTML = `
-      <span>${item.nombre}<br><strong>$${item.precio * item.cantidad}</strong></span>
-      <div class="qty-controls">
-        <button data-action="menos" data-id="${item.id}">−</button>
-        <span>${item.cantidad}</span>
-        <button data-action="mas" data-id="${item.id}">+</button>
-        <button data-action="eliminar" data-id="${item.id}">🗑</button>
-      </div>
+      <span>${item.nombre} x${item.cantidad}</span>
+      <span>$${item.precio * item.cantidad}
+        <button onclick="eliminarDelCarrito(${item.id})">🗑️</button>
+      </span>
     `;
     lista.appendChild(li);
   });
 
-  const total = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
   document.getElementById("cart-total").textContent = `$${total}`;
+  document.getElementById("cart-count").textContent = contador;
 }
 
-function actualizarContador() {
-  const total = carrito.reduce((acc, i) => acc + i.cantidad, 0);
-  document.getElementById("cart-count").textContent = total;
+function eliminarDelCarrito(id) {
+  carrito = carrito.filter(item => item.id !== id);
+  actualizarCarrito();
 }
-
-// ===== CONTROLES DEL CARRITO =====
-document.getElementById("cart-items").addEventListener("click", (e) => {
-  const btn = e.target.closest("button");
-  if (!btn) return;
-
-  const id = parseInt(btn.dataset.id);
-  const action = btn.dataset.action;
-  const item = carrito.find((i) => i.id === id);
-
-  if (action === "mas") item.cantidad++;
-  if (action === "menos") {
-    item.cantidad--;
-    if (item.cantidad <= 0) carrito = carrito.filter((i) => i.id !== id);
-  }
-  if (action === "eliminar") carrito = carrito.filter((i) => i.id !== id);
-
-  guardarYRenderizar();
-});
 
 // ===== ABRIR / CERRAR CARRITO =====
-const panel = document.getElementById("cart-panel");
+const cartPanel = document.getElementById("cart-panel");
 const overlay = document.getElementById("cart-overlay");
 
 function abrirCarrito() {
-  panel.classList.add("open");
-  overlay.classList.add("show");
+  cartPanel.classList.add("open");
+  overlay.classList.add("active");
 }
+
 function cerrarCarrito() {
-  panel.classList.remove("open");
-  overlay.classList.remove("show");
+  cartPanel.classList.remove("open");
+  overlay.classList.remove("active");
 }
 
 document.getElementById("cart-toggle").addEventListener("click", abrirCarrito);
 document.getElementById("cart-close").addEventListener("click", cerrarCarrito);
 overlay.addEventListener("click", cerrarCarrito);
 
-// ===== CHECKOUT (aquí conectas Stripe/PayPal) =====
+// ===== MODAL DE PAGO QR =====
+const paymentModal = document.getElementById("payment-modal");
+const modalOverlay = document.getElementById("modal-overlay");
+
 document.getElementById("checkout-btn").addEventListener("click", () => {
   if (carrito.length === 0) {
-    alert("Tu carrito está vacío 🐴");
+    alert("Tu carrito está vacío 🌸");
     return;
   }
-
-  // OPCIÓN A: Redirigir a un Payment Link de Stripe
-  // window.location.href = "https://buy.stripe.com/TU_LINK_AQUI";
-
-  // OPCIÓN B: Redirigir a PayPal.me
-  // window.location.href = "https://paypal.me/tuusuario";
-
-  // Por ahora, mostramos un resumen para que pruebes
-  const total = carrito.reduce((acc, i) => acc + i.precio * i.cantidad, 0);
-  alert(`Pedido por $${total}. Aquí conectarás tu pasarela de pago (Stripe/PayPal).`);
+  
+  // Actualizamos el total en el modal
+  const totalText = document.getElementById("cart-total").textContent;
+  document.getElementById("modal-total").textContent = totalText;
+  
+  // Cerramos el carrito y abrimos el modal
+  cerrarCarrito();
+  paymentModal.classList.add("open");
+  modalOverlay.classList.add("active");
 });
 
-// ===== INICIALIZAR =====
-renderCarrito();
-actualizarContador();
+function cerrarModal() {
+  paymentModal.classList.remove("open");
+  modalOverlay.classList.remove("active");
+}
+
+document.getElementById("modal-close").addEventListener("click", cerrarModal);
+modalOverlay.addEventListener("click", cerrarModal);
+
+// Simular confirmación de pago
+document.getElementById("confirm-payment").addEventListener("click", () => {
+  alert("¡Gracias! Tu pedido está en revisión. Envíanos el comprobante por Instagram.");
+  carrito = [];
+  actualizarCarrito();
+  cerrarModal();
+});

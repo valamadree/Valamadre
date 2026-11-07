@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
+<body>
 
   <!-- HEADER -->
   <header class="site-header">
@@ -30,10 +31,19 @@
     </div>
   </section>
 
-  <!-- PRODUCTOS -->
+  <!-- PRODUCTOS Y CATEGORÍAS -->
   <main>
     <section id="productos" class="products-section">
       <h2 class="section-title">✦ Catálogo ✦</h2>
+      
+      <!-- NUEVO: Filtro de Categorías -->
+      <div class="categories" id="categories">
+        <button class="category-btn active" data-category="todos">Todos</button>
+        <button class="category-btn" data-category="crochet">Crochet</button>
+        <button class="category-btn" data-category="papeleria">Papelería</button>
+        <button class="category-btn" data-category="accesorios">Accesorios</button>
+      </div>
+
       <div class="product-grid" id="product-grid">
         <!-- Los productos se generan desde script.js -->
       </div>
@@ -50,10 +60,34 @@
     <div class="cart-footer">
       <p>Total: <strong id="cart-total">$0</strong></p>
       <button id="checkout-btn" class="btn-primary">Finalizar compra</button>
-      <small>Serás redirigida a una pasarela segura (Stripe/PayPal).</small>
     </div>
   </aside>
   <div id="cart-overlay" class="cart-overlay"></div>
+
+  <!-- NUEVO: MODAL DE PAGO CON QR -->
+  <div id="payment-modal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <button id="modal-close" class="modal-close">✕</button>
+      <h2>Finalizar Pago</h2>
+      <p>Escanea el código QR para realizar tu pago.</p>
+      
+      <div class="qr-container">
+        <!-- Reemplaza esta URL por la imagen de tu QR real -->
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=PagoPixelThread" alt="Código QR de Pago" class="qr-img">
+      </div>
+      
+      <div class="payment-instructions">
+        <p><strong>Total a pagar: <span id="modal-total">$0</span></strong></p>
+        <ol>
+          <li>Escanea el QR desde tu app bancaria.</li>
+          <li>Realiza la transferencia por el monto exacto.</li>
+          <li>Envíanos el comprobante por Instagram para coordinar el envío.</li>
+        </ol>
+      </div>
+      <button id="confirm-payment" class="btn-primary">Ya realicé el pago</button>
+    </div>
+  </div>
+  <div id="modal-overlay" class="cart-overlay"></div>
 
   <!-- FOOTER -->
   <footer class="site-footer">
