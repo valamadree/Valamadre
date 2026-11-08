@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root{--pink:#ff3eb5;--blue:#193fbd;--lime:#d7ff58;--ink:#111;--paper:#fad9e7;--line:#1b1b1b}
+    :root{--pink:#ff3eb5;--blue:#193fbd;--lime:#d7ff58;--ink:#111;--paper:#fff9ed;--line:#1b1b1b}
     *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--paper);color:var(--ink);font-family:"Space Grotesk",sans-serif}
     a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer}
     .ticker{background:var(--pink);border-bottom:1px solid var(--ink);overflow:hidden;white-space:nowrap;padding:9px 0;font:11px "DM Mono",monospace;text-transform:uppercase}
@@ -182,7 +182,7 @@
       if(!cart.length){alert("Tu bolsa está vacía.");return;}
       const message="¡Hola VALAMADRE! Quiero consultar disponibilidad y precios de:%0A"+cart.map(p=>`• ${p.name} x${p.qty}`).join("%0A");
       // Reemplaza el número por tu WhatsApp con indicativo de país, sin + ni espacios.
-      const whatsapp="573000000000";
+      const whatsapp="573173749589";
       window.open(`https://wa.me/${whatsapp}?text=${message}`,"_blank");
     });
     document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{
