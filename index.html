@@ -39,10 +39,10 @@
     .category:hover{background:var(--blue);color:white}.category small{font:10px "DM Mono",monospace}.category strong{font-size:clamp(23px,3vw,42px);letter-spacing:-.07em}
     .shop{background:#e9e5dc;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
     .filters{display:flex;gap:8px;flex-wrap:wrap}.filter{background:transparent;border:1px solid var(--ink);border-radius:30px;padding:9px 14px;font:10px "DM Mono",monospace;text-transform:uppercase}.filter.active,.filter:hover{background:var(--ink);color:white}
-    .products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .products{display:grid;width:100%;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;align-items:start}
     :root{--product-bg:#E5F5FF} /* Cambia este color para modificar el fondo de las fotos de productos */
-.product{min-width:0}.product-image{aspect-ratio:4/5;background:var(--product-bg);position:relative;overflow:hidden}
-    .product-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s}.product:hover img{transform:scale(1.04)}
+.product{min-width:0;width:100%;max-width:100%;overflow:hidden}.product-image{display:block;width:100%;height:auto;aspect-ratio:4/5;background:var(--product-bg);position:relative;overflow:hidden}
+    .product-image img{display:block;width:100%;max-width:100%;height:100%;object-fit:cover;transition:transform .5s}.product:hover img{transform:scale(1.04)}
     .product-tag{position:absolute;top:12px;left:12px;background:var(--lime);padding:7px 9px;font:9px "DM Mono",monospace;text-transform:uppercase}
     .product-info{display:flex;justify-content:space-between;gap:10px;padding:12px 0 22px;border-bottom:1px solid #aaa}
     .product-info h3{font-size:17px;letter-spacing:-.04em;margin:0 0 4px}.product-info p{font:10px "DM Mono",monospace;text-transform:uppercase;margin:0;color:#555}
@@ -61,8 +61,8 @@
     .remove{border:0;background:none;text-decoration:underline;font:10px "DM Mono",monospace}
     .checkout{background:var(--pink);border:1px solid var(--ink);padding:15px;font:11px "DM Mono",monospace;text-transform:uppercase}.empty{font:12px "DM Mono",monospace;color:#666}
     .shade{position:fixed;inset:0;background:#0008;z-index:9;opacity:0;pointer-events:none;transition:.3s}.shade.show{opacity:1;pointer-events:auto}
-    @media(max-width:760px){header{flex-wrap:wrap}nav{order:3;width:100%;justify-content:space-between;gap:10px}.hero{grid-template-columns:1fr}.hero-copy{min-height:470px}.hero-image{min-height:420px}.categories{grid-template-columns:1fr 1fr}.category:nth-child(2){border-right:0}.category:nth-child(-n+2){border-bottom:1px solid var(--ink)}.products{grid-template-columns:repeat(2,1fr)}.manifesto{grid-template-columns:1fr}.manifesto-copy{min-height:370px}.contact{align-items:start;flex-direction:column}}
-    @media(max-width:430px){.section{padding:55px 5%}.products{gap:10px}.product-info{flex-direction:column}.add{align-self:flex-start}.hero-copy{padding:45px 7%}.hero-bottom p{font-size:13px}.round-link{width:75px;height:75px}}
+    @media(max-width:760px){header{flex-wrap:wrap}nav{order:3;width:100%;justify-content:space-between;gap:10px}.hero{grid-template-columns:1fr}.hero-copy{min-height:470px}.hero-image{min-height:420px}.categories{grid-template-columns:1fr 1fr}.category:nth-child(2){border-right:0}.category:nth-child(-n+2){border-bottom:1px solid var(--ink)}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.manifesto{grid-template-columns:1fr}.manifesto-copy{min-height:370px}.contact{align-items:start;flex-direction:column}}
+    @media(max-width:430px){.section{padding:55px 5%}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-info{flex-direction:column}.add{align-self:flex-start}.hero-copy{padding:45px 7%}.hero-bottom p{font-size:13px}.round-link{width:75px;height:75px}}
   </style>
 </head>
 <body>
@@ -150,7 +150,7 @@
       {id:4,name:"Bolso nube",category:"Accesorios",detail:"Crochet · Textura chunky",image:"assets/bolsonube.jpg",tag:"Hecho a mano",price:70.000},
       {id:5,name:"Guantes rosados",category:"Tejidos",detail:"Tejido · Rosa",image:"assets/GUANTESROSA.jpg",tag:"Gráfica propia",price:35.000},
       {id:6,name:"Camiseta blanca",category:"Ropa",detail:"Gráfica VALAMADRE",image:"assets/archivo-2.jpg",tag:"Gráfica propia",price:null},
-      {id:7,name:"Gorro cielo",category:"Tejidos",detail:"Crochet · Azul y blanco",image:"assets/gorronube.jpg",tag:"Tejido",price:60.000},
+      {id:7,name:"Gorro cielo",category:"Tejidos",detail:"Crochet · Azul y blanco",image:"assets/gorronube.jpg",tag:"Tejido",price:null},
       {id:8,name:"Amuletos de color",category:"Accesorios",detail:"Pequeños objetos tejidos",image:"assets/archivo-5.jpg",tag:"Pieza única",price:null},
       {id:9,name:"Afiche No Parar",category:"Papelería",detail:"Impreso / arte gráfico",image:"assets/NOPARARBORD.jpg",tag:"Edición gráfica",price:null}
     ];
@@ -170,8 +170,8 @@
 
     function renderProducts(filter="Todos"){
       productsEl.innerHTML = products.filter(p=>filter==="Todos"||p.category===filter).map(p=>`
-        <article class="">
-          <div class="-image"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="-tag">${p.tag}</span></div>
+        <article class="product">
+          <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="product-tag">${p.tag}</span></div>
           <div class="product-info"><div><h3>${p.name}</h3><p>${p.detail}</p><p style="margin-top:8px;color:#111;font-weight:700">${formatPrice(p.price)}</p></div>
           <button class="add" onclick="addToCart(${p.id})">Añadir +</button></div>
         </article>`).join("");
