@@ -40,7 +40,8 @@
     .shop{background:#e9e5dc;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink)}
     .filters{display:flex;gap:8px;flex-wrap:wrap}.filter{background:transparent;border:1px solid var(--ink);border-radius:30px;padding:9px 14px;font:10px "DM Mono",monospace;text-transform:uppercase}.filter.active,.filter:hover{background:var(--ink);color:white}
     .products{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .product{min-width:0}.product-image{aspect-ratio:4/5;background:#ddd;position:relative;overflow:hidden}
+    :root{--product-bg:#E5F5FF} /* Cambia este color para modificar el fondo de las fotos de productos */
+.product{min-width:0}.product-image{aspect-ratio:4/5;background:var(--product-bg);position:relative;overflow:hidden}
     .product-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s}.product:hover img{transform:scale(1.04)}
     .product-tag{position:absolute;top:12px;left:12px;background:var(--lime);padding:7px 9px;font:9px "DM Mono",monospace;text-transform:uppercase}
     .product-info{display:flex;justify-content:space-between;gap:10px;padding:12px 0 22px;border-bottom:1px solid #aaa}
@@ -140,17 +141,18 @@
 
   <script>
     // EDITA aquí nombres, categorías, descripciones e imágenes de tus productos.
-    // Para mostrar precios, agrega price: 85000 y cambia el texto de consulta en renderProducts().
+    // Agrega el precio de cada producto en pesos colombianos: price: 85000.
+    // Si lo dejas en null, la web mostrará 'Consultar precio'.
     const products = [
-      {id:1,name:"Gorro Olas",category:"Tejidos",detail:"Tejido a mano · Pieza única",image:"assets/olas-gorro.jpg",tag:"Hecho a mano"},
-      {id:2,name:"Guantes rojos",category:"Tejidos",detail:"Crochet · Color rojo",image:"assets/GUANTESROJO.jpg",tag:"Tejido"},
-      {id:3,name:"Balaclava fuego",category:"Accesorios",detail:"Tejido · Negro y rosa",image:"assets/FUEGOAZGORRO.jpg",tag:"Favorito"},
-      {id:4,name:"Bolso nube",category:"Accesorios",detail:"Crochet · Textura chunky",image:"assets/bolsonube.jpg",tag:"Hecho a mano"},
-      {id:5,name:"Guantes rosados",category:"Tejidos",detail:"Tejido · Rosa",image:"assets/GUANTESROSA.jpg",tag:"Gráfica propia"},
-      {id:6,name:"Camiseta blanca",category:"Ropa",detail:"Gráfica VALAMADRE",image:"assets/archivo-2.jpg",tag:"Gráfica propia"},
-      {id:7,name:"Gorro cielo",category:"Tejidos",detail:"Crochet · Azul y blanco",image:"assets/gorronube.jpg",tag:"Tejido"},
-      {id:8,name:"Amuletos de color",category:"Accesorios",detail:"Pequeños objetos tejidos",image:"assets/archivo-5.jpg",tag:"Pieza única"},
-      {id:9,name:"Afiche No Parar",category:"Papelería",detail:"Impreso / arte gráfico",image:"assets/NOPARARBORD.jpg",tag:"Edición gráfica"}
+      {id:1,name:"Gorro Olas",category:"Tejidos",detail:"Tejido a mano · Pieza única",image:"assets/olas-gorro.jpg",tag:"Hecho a mano",price:200.000},
+      {id:2,name:"Guantes rojos",category:"Tejidos",detail:"Crochet · Color rojo",image:"assets/GUANTESROJO.jpg",tag:"Tejido",price:35.000},
+      {id:3,name:"Balaclava fuego",category:"Accesorios",detail:"Tejido · Negro y rosa",image:"assets/FUEGOAZGORRO.jpg",tag:"Favorito",price:200.000},
+      {id:4,name:"Bolso nube",category:"Accesorios",detail:"Crochet · Textura chunky",image:"assets/bolsonube.jpg",tag:"Hecho a mano",price:70.000},
+      {id:5,name:"Guantes rosados",category:"Tejidos",detail:"Tejido · Rosa",image:"assets/GUANTESROSA.jpg",tag:"Gráfica propia",price:35.000},
+      {id:6,name:"Camiseta blanca",category:"Ropa",detail:"Gráfica VALAMADRE",image:"assets/archivo-2.jpg",tag:"Gráfica propia",price:null},
+      {id:7,name:"Gorro cielo",category:"Tejidos",detail:"Crochet · Azul y blanco",image:"assets/gorronube.jpg",tag:"Tejido",price:60.000},
+      {id:8,name:"Amuletos de color",category:"Accesorios",detail:"Pequeños objetos tejidos",image:"assets/archivo-5.jpg",tag:"Pieza única",price:null},
+      {id:9,name:"Afiche No Parar",category:"Papelería",detail:"Impreso / arte gráfico",image:"assets/NOPARARBORD.jpg",tag:"Edición gráfica",price:null}
     ];
     let cart = [];
     const productsEl = document.getElementById("products");
@@ -159,11 +161,18 @@
     const panel = document.getElementById("cart-panel");
     const shade = document.getElementById("shade");
 
+    // Formatea los precios como pesos colombianos.
+    function formatPrice(price){
+      return price == null ? "Consultar precio" : new Intl.NumberFormat("es-CO", {
+        style:"currency", currency:"COP", maximumFractionDigits:0
+      }).format(price);
+    }
+
     function renderProducts(filter="Todos"){
       productsEl.innerHTML = products.filter(p=>filter==="Todos"||p.category===filter).map(p=>`
-        <article class="product">
-          <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="product-tag">${p.tag}</span></div>
-          <div class="product-info"><div><h3>${p.name}</h3><p>${p.detail}</p><p style="margin-top:8px;color:#111">Consultar precio</p></div>
+        <article class="">
+          <div class="-image"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="-tag">${p.tag}</span></div>
+          <div class="product-info"><div><h3>${p.name}</h3><p>${p.detail}</p><p style="margin-top:8px;color:#111;font-weight:700">${formatPrice(p.price)}</p></div>
           <button class="add" onclick="addToCart(${p.id})">Añadir +</button></div>
         </article>`).join("");
     }
@@ -171,7 +180,16 @@
     function removeFromCart(id){cart=cart.filter(x=>x.id!==id);renderCart();}
     function renderCart(){
       countEl.textContent=cart.reduce((n,p)=>n+p.qty,0);
-      cartItems.innerHTML=cart.length?cart.map(p=>`<div class="cart-row"><div><strong>${p.name}</strong><br><span class="micro">${p.category} · Cantidad: ${p.qty}</span></div><button class="remove" onclick="removeFromCart(${p.id})">Quitar</button></div>`).join(""):'<p class="empty">Todavía no hay nada por aquí.</p>';
+      if(!cart.length){
+        cartItems.innerHTML='<p class="empty">Todavía no hay nada por aquí.</p>';
+        return;
+      }
+      const rows=cart.map(p=>`<div class="cart-row"><div><strong>${p.name}</strong><br><span class="micro">${p.category} · Cantidad: ${p.qty}</span><br><span class="micro">${formatPrice(p.price)}</span></div><button class="remove" onclick="removeFromCart(${p.id})">Quitar</button></div>`).join("");
+      const hasAllPrices=cart.every(p=>p.price!=null);
+      const total=cart.reduce((sum,p)=>sum+(p.price||0)*p.qty,0);
+      cartItems.innerHTML=rows+(hasAllPrices
+        ? `<p style="text-align:right;font-weight:700">Total: ${formatPrice(total)}</p>`
+        : '<p class="empty">El total aparecerá cuando todos los productos tengan precio.</p>');
     }
     function openCart(){panel.classList.add("open");shade.classList.add("show");}
     function closeCart(){panel.classList.remove("open");shade.classList.remove("show");}
@@ -180,7 +198,11 @@
     shade.addEventListener("click",closeCart);
     document.getElementById("checkout").addEventListener("click",()=>{
       if(!cart.length){alert("Tu bolsa está vacía.");return;}
-      const message="¡Hola VALAMADRE! Quiero consultar disponibilidad y precios de:%0A"+cart.map(p=>`• ${p.name} x${p.qty}`).join("%0A");
+      const lines=cart.map(p=>`• ${p.name} x${p.qty} — ${p.price==null?"Consultar precio":formatPrice(p.price)}`);
+      const total=cart.reduce((sum,p)=>sum+(p.price||0)*p.qty,0);
+      const hasAllPrices=cart.every(p=>p.price!=null);
+      const message="¡Hola VALAMADRE! Quiero pedir:%0A"+lines.join("%0A")+
+        (hasAllPrices?`%0ATotal: ${formatPrice(total)}`:"%0AQuisiera confirmar los precios de los productos sin precio.");
       // Reemplaza el número por tu WhatsApp con indicativo de país, sin + ni espacios.
       const whatsapp="573173749589";
       window.open(`https://wa.me/${whatsapp}?text=${message}`,"_blank");
