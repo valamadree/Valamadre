@@ -48,7 +48,7 @@
     .product-info h3{font-size:17px;letter-spacing:-.04em;margin:0 0 4px}.product-info p{font:10px "DM Mono",monospace;text-transform:uppercase;margin:0;color:#555}
     .add{align-self:center;border:1px solid var(--ink);background:transparent;padding:9px 11px;font:10px "DM Mono",monospace;text-transform:uppercase;white-space:nowrap}.add:hover{background:var(--pink)}
     .manifesto{display:grid;grid-template-columns:1fr 1fr;min-height:420px;border-bottom:1px solid var(--ink)}
-    .manifesto-image{min-height:320px;overflow:hidden}.manifesto-image img{width:100%;height:100%;object-fit:cover}
+    .manifesto-image{min-height:320px;overflow:hidden;background:#111}.manifesto-image img,.manifesto-image video{display:block;width:100%;height:100%;min-height:320px;object-fit:cover}
     .manifesto-copy{background:var(--pink);padding:7vw 6vw;display:flex;flex-direction:column;justify-content:space-between}
     .manifesto-copy h2{font-size:clamp(48px,7vw,100px)}.manifesto-copy p{font-size:16px;line-height:1.5;max-width:390px}
     .contact{background:var(--lime);padding:70px 4.5%;display:flex;justify-content:space-between;align-items:end;gap:25px}
@@ -62,13 +62,29 @@
     .checkout{background:var(--pink);border:1px solid var(--ink);padding:15px;font:11px "DM Mono",monospace;text-transform:uppercase}.empty{font:12px "DM Mono",monospace;color:#666}
     .shade{position:fixed;inset:0;background:#0008;z-index:9;opacity:0;pointer-events:none;transition:.3s}.shade.show{opacity:1;pointer-events:auto}
 
-    /* Visor ampliado al hacer clic en la foto de un producto */
+    /* Galería de fotografías de cada producto */
     .product-image{cursor:zoom-in}
-    .image-lightbox{position:fixed;inset:0;z-index:30;background:#000d;display:none;align-items:center;justify-content:center;padding:24px}
+    .image-lightbox{position:fixed;inset:0;z-index:30;background:#000e;display:none;align-items:center;justify-content:center;padding:65px 24px 55px}
     .image-lightbox.open{display:flex}
-    .image-lightbox img{display:block;max-width:min(90vw,900px);max-height:88vh;width:auto;height:auto;object-fit:contain;background:var(--product-bg);box-shadow:0 12px 50px #0008}
+    .gallery-content{width:min(100%,1050px);height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:15px}
+    .gallery-stage{position:relative;display:flex;align-items:center;justify-content:center;width:100%;height:min(68vh,720px);min-height:220px}
+    .gallery-stage img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;background:var(--product-bg);box-shadow:0 12px 50px #0008}
+    .gallery-arrow{position:absolute;top:50%;transform:translateY(-50%);width:44px;height:44px;border:1px solid white;background:#111;color:white;font-size:27px;line-height:1}
+    .gallery-prev{left:8px}.gallery-next{right:8px}
     .lightbox-close{position:absolute;top:18px;right:20px;width:44px;height:44px;border:1px solid white;background:#111;color:white;font-size:28px;line-height:1}
+    .gallery-thumbnails{display:flex;justify-content:center;gap:9px;max-width:100%;overflow-x:auto;padding:4px 2px 8px}
+    .gallery-thumb{width:62px;height:62px;flex:0 0 62px;padding:0;border:2px solid transparent;background:#222;opacity:.7;overflow:hidden}
+    .gallery-thumb.active{border-color:var(--lime);opacity:1}
+    .gallery-thumb img{width:100%;height:100%;object-fit:cover}
+    .gallery-caption{color:white;text-align:center;font:10px "DM Mono",monospace;text-transform:uppercase}
     .lightbox-hint{position:absolute;bottom:14px;left:0;right:0;text-align:center;color:white;font:10px "DM Mono",monospace;text-transform:uppercase}
+    @media(max-width:600px){
+      .image-lightbox{padding:65px 10px 55px}
+      .gallery-stage{height:58vh}
+      .gallery-arrow{width:36px;height:36px;font-size:22px}
+      .gallery-prev{left:2px}.gallery-next{right:2px}
+      .gallery-thumb{width:52px;height:52px;flex-basis:52px}
+    }
     @media(max-width:760px){header{flex-wrap:wrap}nav{order:3;width:100%;justify-content:space-between;gap:10px}.hero{grid-template-columns:1fr}.hero-copy{min-height:470px}.hero-image{min-height:420px}.categories{grid-template-columns:1fr 1fr}.category:nth-child(2){border-right:0}.category:nth-child(-n+2){border-bottom:1px solid var(--ink)}.products{grid-template-columns:repeat(2,minmax(0,1fr))}.manifesto{grid-template-columns:1fr}.manifesto-copy{min-height:370px}.contact{align-items:start;flex-direction:column}}
     @media(max-width:430px){.section{padding:55px 5%}.products{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.product-info{flex-direction:column}.add{align-self:flex-start}.hero-copy{padding:45px 7%}.hero-bottom p{font-size:13px}.round-link{width:75px;height:75px}}
   </style>
@@ -122,7 +138,12 @@
     </section>
 
     <section class="manifesto" id="nosotras">
-      <div class="manifesto-image"><img src="assets/grupo azul.png" alt="Afiche artesanal de VALAMADRE"></div>
+      <div class="manifesto-image">
+        <video controls autoplay muted loop playsinline preload="auto" poster="assets/grupo azul.png" aria-label="Video de VALAMADRE">
+          <source src="assets/video-grupo.mp4" type="video/mp4">
+          Tu navegador no puede reproducir este video.
+        </video>
+      </div>
       <div class="manifesto-copy">
         <div class="eyebrow">Una declaración de intenciones ✳</div>
         <h2>NO PARAR<br>DE CREAR.<br>NI PEDIR<br>PERMISO.</h2>
@@ -147,10 +168,18 @@
     <p class="micro">El precio y la disponibilidad se confirman por mensaje.</p>
   </aside>
 
-  <div class="image-lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Imagen ampliada del producto">
-    <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar imagen">×</button>
-    <img id="lightbox-image" src="" alt="">
-    <div class="lightbox-hint">Clic fuera de la imagen o pulsa ESC para cerrar</div>
+  <div class="image-lightbox" id="image-lightbox" role="dialog" aria-modal="true" aria-label="Galería de imágenes del producto">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar galería">×</button>
+    <div class="gallery-content">
+      <div class="gallery-stage">
+        <button class="gallery-arrow gallery-prev" id="gallery-prev" aria-label="Foto anterior">‹</button>
+        <img id="lightbox-image" src="" alt="">
+        <button class="gallery-arrow gallery-next" id="gallery-next" aria-label="Foto siguiente">›</button>
+      </div>
+      <div class="gallery-caption" id="gallery-caption"></div>
+      <div class="gallery-thumbnails" id="gallery-thumbnails" aria-label="Miniaturas del producto"></div>
+    </div>
+    <div class="lightbox-hint">Usa las flechas o las miniaturas · ESC para cerrar</div>
   </div>
 
   <script>
@@ -158,16 +187,18 @@
     // Agrega el precio de cada producto en pesos colombianos: price: 85000.
     // Si lo dejas en null, la web mostrará 'Consultar precio'.
     const products = [
-      {id:1,name:"Gorro Olas",category:"Tejidos",detail:"Tejido a mano · Pieza única",image:"assets/olas-gorro.jpg",tag:"Hecho a mano",price:200000},
-      {id:2,name:"Guantes rojos",category:"Tejidos",detail:"Crochet · Color rojo",image:"assets/GUANTESROJO.jpg",tag:"Tejido",price:35000},
-      {id:3,name:"Buckethat fuego azul",category:"Accesorios",detail:"Tejido · Negro y azules",image:"assets/FUEGOAZGORRO.jpg",tag:"Favorito",price:200000},
-      {id:4,name:"Bolso nube",category:"Accesorios",detail:"Crochet · Textura chunky",image:"assets/bolsonube.jpg",tag:"Hecho a mano",price:70000},
-      {id:5,name:"Guantes rosados",category:"Tejidos",detail:"Tejido · Rosa",image:"assets/GUANTESROSA.jpg",tag:"Gráfica propia",price:35000},
-      {id:6,name:"Camiseta blanca",category:"Ropa",detail:"Gráfica VALAMADRE",image:"assets/archivo-2.jpg",tag:"Gráfica propia",price:70000},
-      {id:7,name:"Gorro cielo",category:"Tejidos",detail:"Crochet · Azul y blanco",image:"assets/gorronube.jpg",tag:"Tejido",price:60000},
-      {id:8,name:"Mini porta-bricket",category:"Accesorios",detail:"Pequeños objetos tejidos",image:"assets/minibricket.png",tag:"Pieza única",price:20000},
-      {id:9,name:"Bolso Margarita",category:"Tejidos",detail:"Bolso cute",image:"assets/bolsone1.png",tag:"Pieza única",price:80000},
-      {id:10,name:"Afiche No Parar",category:"Papelería",detail:"Bordado sobre papel / arte gráfico",image:"assets/NOPARARBORD.jpg",tag:"Edición gráfica",price:250000}
+      // Para agregar fotos, escribe sus rutas dentro de images: ["foto1.jpg", "foto2.jpg", ...].
+      // La primera foto de images será la portada del producto en la tienda.
+      {id:1,name:"Gorro Olas",category:"Tejidos",detail:"Tejido a mano · Pieza única",images:["assets/olas-gorro.jpg","assets/olas-gorro-2.jpg","assets/olas-gorro-3.jpg"],tag:"Hecho a mano",price:200000},
+      {id:2,name:"Guantes rojos",category:"Tejidos",detail:"Crochet · Color rojo",images:["assets/GUANTESROJO.jpg"],tag:"Tejido",price:35000},
+      {id:3,name:"Buckethat fuego azul",category:"Accesorios",detail:"Tejido · Negro y azules",images:["assets/FUEGOAZGORRO.jpg"],tag:"Favorito",price:200000},
+      {id:4,name:"Bolso nube",category:"Accesorios",detail:"Crochet · Textura chunky",images:["assets/bolsonube.jpg"],tag:"Hecho a mano",price:70000},
+      {id:5,name:"Guantes rosados",category:"Tejidos",detail:"Tejido · Rosa",images:["assets/GUANTESROSA.jpg"],tag:"Gráfica propia",price:35000},
+      {id:6,name:"Camiseta blanca",category:"Ropa",detail:"Gráfica VALAMADRE",images:["assets/archivo-2.jpg"],tag:"Gráfica propia",price:70000},
+      {id:7,name:"Gorro cielo",category:"Tejidos",detail:"Crochet · Azul y blanco",images:["assets/gorronube.jpg"],tag:"Tejido",price:60000},
+      {id:8,name:"Mini porta-bricket",category:"Accesorios",detail:"Pequeños objetos tejidos",images:["assets/minibricket.png"],tag:"Pieza única",price:20000},
+      {id:9,name:"Bolso Margarita",category:"Tejidos",detail:"Bolso cute",images:["assets/bolsone1.png"],tag:"Pieza única",price:80000},
+      {id:10,name:"Afiche No Parar",category:"Papelería",detail:"Bordado sobre papel / arte gráfico",images:["assets/NOPARARBORD.jpg"],tag:"Edición gráfica",price:250000}
     ];
     let cart = [];
     const productsEl = document.getElementById("products");
@@ -178,30 +209,73 @@
 
     const lightbox = document.getElementById("image-lightbox");
     const lightboxImage = document.getElementById("lightbox-image");
+    const galleryThumbnails = document.getElementById("gallery-thumbnails");
+    const galleryCaption = document.getElementById("gallery-caption");
+    let activeGalleryImages = [];
+    let activeGalleryIndex = 0;
+    let activeGalleryName = "";
+
+    function showGalleryImage(index){
+      if(!activeGalleryImages.length) return;
+      activeGalleryIndex = (index + activeGalleryImages.length) % activeGalleryImages.length;
+      const imagePath = activeGalleryImages[activeGalleryIndex];
+      lightboxImage.src = imagePath;
+      lightboxImage.alt = activeGalleryName + " - foto " + (activeGalleryIndex + 1);
+      galleryCaption.textContent = activeGalleryName + " · " + (activeGalleryIndex + 1) + " / " + activeGalleryImages.length;
+      galleryThumbnails.querySelectorAll(".gallery-thumb").forEach((button,i)=>{
+        button.classList.toggle("active",i === activeGalleryIndex);
+        button.setAttribute("aria-current",i === activeGalleryIndex ? "true" : "false");
+      });
+    }
+
+    function openGallery(product){
+      activeGalleryImages = product.images || [product.image];
+      activeGalleryImages = activeGalleryImages.filter(Boolean);
+      activeGalleryIndex = 0;
+      activeGalleryName = product.name;
+      galleryThumbnails.innerHTML = activeGalleryImages.map((src,i)=>`
+        <button class="gallery-thumb${i===0 ? " active" : ""}" type="button" data-index="${i}" aria-label="Ver foto ${i+1}">
+          <img src="${src}" alt="" loading="lazy">
+        </button>`).join("");
+      showGalleryImage(0);
+      lightbox.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
 
     function closeLightbox(){
       lightbox.classList.remove("open");
       lightboxImage.src = "";
+      galleryThumbnails.innerHTML = "";
       document.body.style.overflow = "";
     }
 
-    // Funciona también después de filtrar o volver a dibujar los productos.
+    // Abre la galería del producto incluso después de aplicar filtros.
     productsEl.addEventListener("click",event=>{
       if(event.target.closest("button")) return;
-      const image = event.target.closest(".product-image img");
+      const productCard = event.target.closest(".product");
+      if(!productCard) return;
+      const image = event.target.closest(".product-image");
       if(!image) return;
-      lightboxImage.src = image.src;
-      lightboxImage.alt = image.alt;
-      lightbox.classList.add("open");
-      document.body.style.overflow = "hidden";
+      const productName = productCard.querySelector("h3").textContent;
+      const product = products.find(p=>p.name === productName);
+      if(product) openGallery(product);
     });
 
+    galleryThumbnails.addEventListener("click",event=>{
+      const button = event.target.closest(".gallery-thumb");
+      if(button) showGalleryImage(Number(button.dataset.index));
+    });
+    document.getElementById("gallery-prev").addEventListener("click",()=>showGalleryImage(activeGalleryIndex - 1));
+    document.getElementById("gallery-next").addEventListener("click",()=>showGalleryImage(activeGalleryIndex + 1));
     document.getElementById("lightbox-close").addEventListener("click",closeLightbox);
     lightbox.addEventListener("click",event=>{
       if(event.target === lightbox) closeLightbox();
     });
     document.addEventListener("keydown",event=>{
-      if(event.key === "Escape" && lightbox.classList.contains("open")) closeLightbox();
+      if(!lightbox.classList.contains("open")) return;
+      if(event.key === "Escape") closeLightbox();
+      if(event.key === "ArrowLeft") showGalleryImage(activeGalleryIndex - 1);
+      if(event.key === "ArrowRight") showGalleryImage(activeGalleryIndex + 1);
     });
 
     // Formatea los precios como pesos colombianos.
@@ -215,7 +289,7 @@
     function renderProducts(filter="Todos"){
       productsEl.innerHTML = products.filter(p=>filter==="Todos"||p.category===filter).map(p=>`
         <article class="product">
-          <div class="product-image"><img src="${p.image}" alt="${p.name}" loading="lazy"><span class="product-tag">${p.tag}</span></div>
+          <div class="product-image"><img src="${(p.images && p.images[0]) || p.image}" alt="${p.name}" loading="lazy"><span class="product-tag">${p.tag}</span></div>
           <div class="product-info"><div><h3>${p.name}</h3><p>${p.detail}</p><p style="margin-top:8px;color:#111;font-weight:700">${formatPrice(p.price)}</p></div>
           <button class="add" onclick="addToCart(${p.id})">Añadir +</button></div>
         </article>`).join("");
